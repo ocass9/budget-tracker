@@ -7,7 +7,7 @@ class Transaction(db.Model):
     amount = db.Column(db.Float, nullable=False)
     category = db.Column(db.String(100), nullable=False)
     type = db.Column(db.String(10), nullable=False)
-    date = db.column(db.Date, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     note = db.Column(db.String(200), nullable=True)
 
     def __repr__(self):
