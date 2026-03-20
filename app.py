@@ -27,6 +27,11 @@ def add():
         return redirect(url_for("index"))
     return render_template("add.html")
 
+@app.route("/transactions")
+def transactions():
+    all_transactions = Transaction.query.order_by(Transaction.date.desc()).all()
+    return render_template("transactions.html", transactions=all_transactions)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
