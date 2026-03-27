@@ -13,16 +13,21 @@
             <th>Category</th>
             <th>Amount</th>
             <th>Note</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for transaction in transactions %}
         <tr>
-            <td>{{ transaction.date }}</td>
+            <td>{{ transaction.formatted_date() }}</td>
             <td>{{ transaction.type }}</td>
             <td>{{ transaction.category }}</td>
             <td>${{ transaction.amount }}</td>
             <td>{{ transaction.note }}</td>
+            <td>
+                <a href="/edit/{{ transaction.id }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="/delete/{{ transaction.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this transaction?')">Delete</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

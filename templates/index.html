@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Dashboard</h2>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-white bg-success">
+      <div class="card-body">
+        <h5 class="card-title">Total Income</h5>
+        <h3>${{ income }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-danger">
+      <div class="card-body">
+        <h5 class="card-title">Total Expenses</h5>
+        <h3>${{ expenses }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-primary">
+      <div class="card-body">
+        <h5 class="card-title">Balance</h5>
+        <h3>${{ balance }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4>Recent Transactions</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Category</th>
+      <th>Amount</th>
+      <th>Note</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for transaction in transactions %}
+    <tr>
+      <td>{{ transaction.formatted_date() }}</td>
+      <td>{{ transaction.type }}</td>
+      <td>{{ transaction.category }}</td>
+      <td>${{ transaction.amount }}</td>
+      <td>{{ transaction.note }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <h4>Income vs Expenses</h4>
+        <div style="height: 300px;">
+            <canvas id="incomeExpenseChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h4>Running Balance</h4>
+        <div style="height: 300px;">
+            <canvas id="balanceChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script>
+    const timeScaleOptions = {
+        type: 'time',
+        time: {
+            parser: 'dd/MM/yyyy',
+            unit: 'day',
+            displayFormats: {
+                day: 'dd/MM/yy'
+            }
+        },
+        ticks: {
+            maxTicksLimit: 8,
+            maxRotation: 45
+        }
+    };
+
+    const ctx1 = document.getElementById('incomeExpenseChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels | tojson }},
+            datasets: [
+                {
+                    label: 'Income',
+                    data: {{ income_values | tojson }},
+                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Expenses',
+                    data: {{ expenses_values | tojson }},
+                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                    borderColor: 'rgba(220, 53, 69, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: timeScaleOptions,
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('balanceChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: {{ chart_labels | tojson }},
+            datasets: [
+                {
+                    label: 'Balance',
+                    data: {{ running_balance | tojson }},
+                    backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 3,
+                    pointHoverRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: timeScaleOptions,
+                y: { beginAtZero: false }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

@@ -12,3 +12,6 @@ class Transaction(db.Model):
 
     def __repr__(self):
         return f"<Transaction {self.type} ${self.amount} - {self.category}>"
+
+    def formatted_date(self):
+        return self.date.strftime("%d/%m/%Y")
