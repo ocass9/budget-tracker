@@ -55,15 +55,7 @@ def index():
         cumulative += daily_balance[d]
         raw_balance.append(round(cumulative, 2))
 
-    def smooth(values, window=3):
-        smoothed = []
-        for i in range(len(values)):
-            start = max(0, i - window + 1)
-            avg = sum(values[start:i+1]) / len(values[start:i+1])
-            smoothed.append(round(avg, 2))
-        return smoothed
-
-    running_balance = smooth(raw_balance)
+    running_balance = raw_balance
 
     return render_template(
         "index.html",
