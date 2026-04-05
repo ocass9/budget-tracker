@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Add Goal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Add Spending Goal</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <input type="text" name="category" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Spending Limit ($)</label>
+                <input type="number" step="0.01" name="limit" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Period</label>
+                <select name="period" class="form-select">
+                    <option value="monthly">Monthly</option>
+                    <option value="weekly">Weekly</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Add Goal</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
